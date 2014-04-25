@@ -1,103 +1,84 @@
 Mongous
 ==========
-Mongous, for hu*mongous*, is a simple and blazing fast MongoDB driver that uses a jQuery like syntax.
+Mongous 是一个轻量且高效的 jQuery 语法风格的 MongoDB 驱动。
 
-### How it works
+### 如何工作
 
-	var $ = require("mongous").Mongous;
+    var $ = require("mongous").Mongous;
 
-	$("database.collection").save({my:"value"});
+    $("database.collection").save({my:"value"});
 
-	$("database.collection").find({},function(r){
-		console.log(r);
-	});
+    $("database.collection").find({},function(r){
+        console.log(r);
+    });
 
-Done. App development has never felt as close to the shell as this! Making it a breeze to grab'n'store anything anywhere in your code without the nasty hassle of connections, collections, and cascading callbacks.
+完成。Mongous 使得你能轻而易举地在代码中进行存储，远离讨厌的数据库连接、集合和嵌套回调函数。
 
-### Database & Collections
+### 数据库 & 集合
 
 - <code>db('Database.Collection')</code>
-	- Database is the name of your database
-	- Collection is the name of your collection
-	- Examples
-		- <code>db('blog.post')</code>
-		- <code>db('blog.post.body')</code>
+    - Database      是数据库的名称
+    - Collection    是集合的名称
+    - 示例
+        - <code>db('blog.post')</code>
+        - <code>db('blog.post.body')</code>
 
-### Commands
+### 命令
 
-- **Update** <code>db('blog.post').update(find, update, ...)</code>
-	- find
-		is the object you want to find.
-	- update
-		is what you want to update find with.
-	- ...
-		- <code>{ upsert: true, multi: false }</code>
-		- <code> true, true </code>
-- **Save** <code>db('blog.post').save(what)</code>
-	- what
-		is the object to be updated or created.
-- **Insert** <code>db('blog.post').insert(what...)</code>
-	- what
-		is an object to be created.
-		is an array of objects to be created.
-	- Examples
-		- <code>db('blog.post').save({hello: 'world'})</code>
-		- <code>db('blog.post').save([{hello: 'world'}, {foo: 'bar'}])</code>
-		- <code>db('blog.post').save({hello: 'world'}, {foo: 'bar'})</code>
-- **Remove** <code>db('blog.post').remove(what, ...)</code>
-	- what is the object to be removed.
-	- ...
-		true for atomic.
-- **Find** <code>db('blog.users').find(..., function(reply){ })</code>
-	- reply
-		is the reply from MongoDB.
-	- reply.documents
-		are the documents that you found from MongoDB.
-	- ... <br/>
-		params are filtered by type
-		- Objects
-			- first object
-				is what you want to find.
-			- second object
-				are fields you want
-				<br/>Ex: <code>{ name: 1, age: 1 }</code>
-			- third object
-				is any of the following options:
-				<br/> <code>{ lim: x, skip: y, sort:{age: 1} }</code>
-		- Numbers
-			- first number
-				is the limit (return all if not specified)
-			- second number
-				is the skip
-	- Examples
-		- <code>db('blog.users').find(5, function(reply){ })</code><br/>
-			reply.documents is the first 5 documents,
-		- <code>db('blog.users').find(5, {age: 23}, function(reply){ })</code><br/>
-			with age of 23,
-		- <code>db('blog.users').find({age: 27}, 5, {name: 1}, function(reply){ })</code><br/>
-			and a name.
-		- <code>db('blog.users').find(5, {age: 27}, {name: 1}, {lim: 10}, function(reply){ })</code><br/>
-			is the same as the previous example, except the limit is 10 instead of 5.
-		- <code>db('blog.users').find(5, function(reply){ }, 2)</code><br/>
-			reply.documents skips the first 2 documents and is the next 3 documents.
-		- <code>db('blog.users').find(function(reply){ }, {age: 25}, {}, {limit: 5, skip: 2})</code><br/>
-			is the same as the previous example except only of doucments with the age of 25.
-		- <code>db('blog.users').find({}, {}, {sort: {age: -1}}, function(reply){ })</code><br/>
-			reply.documents is sorted by age in a decsending (acsending while it is {age:1} ) order.  
-- **Operations** <code>db('blog.$cmd').find(command,1)</code>
-	- command
-		is the database operation command you want to perform.
-	- Example
-		<code>db('blog.$cmd').find({drop:"users"},1)</code><br/>
-		drops the users collection, deleting it.
-- **Authentication** <code>db('blog.$cmd').auth(username,password,callback)</code>
-	- username, password <br/>
-		username and password of the 'blog' database
-	- callback <br/>
-		the callback function when authentication is finished.
-	- Example
-		- <code>db('blog.$cmd').auth('user','pass',function(reply){})</code><br/>
-- **Open** <code>db().open(host,port)</code>
-	- Only necessary to call if you explicitly want a different host and port, elsewise it lazy opens.
-			
-Mongous is a reduction ('less is more') of node-mongodb-driver by Christian Kvalheim.
+- **更新** <code>db('blog.post').update(find, update, ...)</code>
+    - find      是你要查找的对象
+    - update    是你要用于更新的对象
+    - ...
+        - <code>{ upsert: true, multi: false }</code>
+        - <code> true, true </code>
+- **保存** <code>db('blog.post').save(what)</code>
+    - what      是用于更新或创建的对象
+- **插入** <code>db('blog.post').insert(what...)</code>
+    - what      是用于创建的对象或包含用于创建的对象的数组
+    - 示例
+        - <code>db('blog.post').save({hello: 'world'})</code>
+        - <code>db('blog.post').save([{hello: 'world'}, {foo: 'bar'}])</code>
+        - <code>db('blog.post').save({hello: 'world'}, {foo: 'bar'})</code>
+- **删除** <code>db('blog.post').remove(what, ...)</code>
+    - what      是将要被删除的对象
+    - ...   true    应用原子性
+- **查找** <code>db('blog.users').find(..., function(reply){ })</code>
+    - reply     是 MongoDB 的返回对象
+    - reply.documents   是从 MongoDB 中检索到的文档数组
+    - ...       用于过滤结果的参数
+        - 按对象过滤
+            - 第一个参数 是你要查找的对象
+            - 第二个参数 是你需要返回的字段    
+                示例: <code>{ name: 1, age: 1 }</code>
+            - 第三个参数 是下列选项中的一些:    
+                <code>{ lim: x, skip: y, sort:{age: 1} }</code>
+        - 按数字过滤
+            - 第一个数字 是返回结果限制量（未设置的话就返回所有结果）
+            - 第二个数字 是忽略的文档数
+    - 示例
+        - <code>db('blog.users').find(5, function(reply){ })</code>    
+            reply.documents 包含前 5 个文档，
+        - <code>db('blog.users').find(5, {age: 23}, function(reply){ })</code>    
+            过滤条件为“age 为 23”，
+        - <code>db('blog.users').find({age: 27}, 5, {name: 1}, function(reply){ })</code>    
+            只读取 name 字段。
+        - <code>db('blog.users').find(5, {age: 27}, {name: 1}, {lim: 10}, function(reply){ })</code>    
+            与前面的例子等价，除了限制结果数量为 10 而不是 5
+        - <code>db('blog.users').find(5, function(reply){ }, 2)</code>    
+            reply.documents 忽略前 2 个文档，包含接下来的 3 个文档。
+        - <code>db('blog.users').find(function(reply){ }, {age: 25}, {}, {limit: 5, skip: 2})</code><br/>
+            与前面的例子等价，除了过滤条件为“age 为 25”，
+        - <code>db('blog.users').find({}, {}, {sort: {age: -1}}, function(reply){ })</code>    
+            reply.documents 被按 age 降序排序（顺序排列: {age:1}）。
+- **操作** <code>db('blog.$cmd').find(command,1)</code>
+    - command   是你要执行的数据库操作命令
+    - 示例 <code>db('blog.$cmd').find({drop:"users"},1)</code>    
+        删除 users 集合
+- **认证** <code>db('blog.$cmd').auth(username,password,callback)</code>
+    - username, password    “blog” 数据库的用户名、密码
+    - callback              认证结束后执行的回调函数
+    - 示例 <code>db('blog.$cmd').auth('user','pass',function(reply){})</code>    
+- **打开连接** <code>db().open(host,port)</code>
+    - 只有在连接不同的主机和端口的时候才需要手动执行，否则它会自动惰性连接。
+            
+Mongous 是对 node-mongodb-driver 的精简（少即是多），由 Christian Kvalheim 编写。
